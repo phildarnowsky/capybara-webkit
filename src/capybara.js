@@ -260,3 +260,45 @@ Capybara = {
   }
 };
 
+Capybara.TimeStub = { 
+  currentTime: Date.now(),        
+  timeoutSchedule: [],
+  nextTimeoutId: 500,
+
+  tick: function(ms) {
+    Capybara.TimeStub.currentTime += ms; 
+
+    due = Capybara.TimeStub.timeoutSchedule.filter(function(scheduled) {return (scheduled[1] <= Capybara.TimeStub.currentTime)});
+    notDue = Capybara.TimeStub.timeoutSchedule.filter(function(scheduled) {return (scheduled[1] > Capybara.TimeStub.currentTime)});
+
+    for(i in due) {
+      dueTimeout = due[i];
+      callback = dueTimeout[2];
+      callback();
+    }
+
+    Capybara.TimeStub.timeoutSchedule = notDue;
+
+    return Capybara.TimeStub.currentTime
+  },
+
+  now: function() {
+    return Capybara.TimeStub.currentTime
+  },
+
+  setTimeout: function(callback, ms) {
+    timeoutId = Capybara.TimeStub.nextTimeoutId;
+    Capybara.TimeStub.nextTimeoutId++;
+
+    Capybara.TimeStub.timeoutSchedule.push([timeoutId, Capybara.TimeStub.now() + ms, callback]);
+
+    return timeoutId
+  },
+
+  stub: function() { 
+    window.Date.now = Capybara.TimeStub.now;
+    window.setTimeout = Capybara.TimeStub.setTimeout;
+  }
+};
+
+
