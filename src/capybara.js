@@ -303,7 +303,7 @@ Capybara.TimeStub = {
   stub: function() { 
     window.Date.now = Capybara.TimeStub.now;
     window.setTimeout = Capybara.TimeStub.setTimeout;
-    window.clearTimeout = Capybara.timeStub.clearTimeout;
+    window.clearTimeout = Capybara.TimeStub.clearTimeout;
   }
 };
 
