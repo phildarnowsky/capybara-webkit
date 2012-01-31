@@ -295,9 +295,15 @@ Capybara.TimeStub = {
     return timeoutId
   },
 
+  clearTimeout: function(timeoutId) {
+    Capybara.TimeStub.timeoutSchedule = Capybara.TimeStub.timeoutSchedule.filter(function(scheduled) {return (scheduled[0] != timeoutId)})
+    return undefined
+  },
+
   stub: function() { 
     window.Date.now = Capybara.TimeStub.now;
     window.setTimeout = Capybara.TimeStub.setTimeout;
+    window.clearTimeout = Capybara.timeStub.clearTimeout;
   }
 };
 
